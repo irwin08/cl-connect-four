@@ -117,7 +117,7 @@
 		 nil))))
 
 
-;; TODO!!! Make macro for if expression that stores expressions in or form and returns value of first not nil case
+;; TODO!!! Make macro for if expression that stores value of expression for use if true
 
 ;; checks if board state is victory - takes board, and row and col of latest move
 ;; returns winning token if true, nil otherwise
@@ -136,3 +136,30 @@
   (if (and (not (nth row (nth col board)))(or (= 0 row) (nth (- row 1) (nth col board))))
       (not (equal (check-victory board row col) (get-opposite-token token)))
       nil))
+
+(defun print-board (board)
+  (loop for i from 0 to 6
+	do (progn (format t "\|")
+	    (loop for j from 0 to 6
+		 do (cond ((nth (- 6 i) (nth j board))
+			   (progn (prin1 (nth (- 6 i) (nth j board)))
+							(format t "\|")))
+			  (t (progn (prin1 'OO)
+				    (format t "\|")))))
+	    (terpri))))
+
+(defun turn-lookup (turn)
+  (cond ((= turn 0) 'R1)
+	((= turn 1) 'R2)))
+
+(defun play ()
+  (let ((turn 0)
+	(move-input '())
+	(board '(() () () () () () ())))
+  (loop while t
+	do (progn ()
+		  (print-board board)
+		  (format t "Player ~d's turn:" (+ 1 turn))
+		  (setq move-input (read))
+		  (make-move (nth 0 move-input) (nth 1 move-input) (turn-lookup turn))
+		  (setq turn (mod (1+ turn) 2))))))
